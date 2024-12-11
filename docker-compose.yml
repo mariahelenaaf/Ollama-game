@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  ollama-service:
+    image: ollama/ollama:latest
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+
+  my-application:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      OLLAMA_HOST: ollama-service
+      PYTHONUNBUFFERED: 1
+    depends_on:
+      - ollama-service
+    ports:
+      - "5000:5000"
+    stdin_open: true  # Consente a Docker di aprire stdin
+    tty: true         # Assegna un TTY
